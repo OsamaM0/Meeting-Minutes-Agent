@@ -1,285 +1,350 @@
-# Meeting Minutes Agent
+# 🎤 Meeting Minutes Agent
 
-An AI-powered meeting minutes generator that transcribes audio files, generates structured meeting minutes, and automatically creates Gmail drafts.
+[![Python Version](https://img.shields.io/badge/python-3.8%2B-blue.svg)](https://python.org)
+[![License](https://img.shields.io/badge/license-Apache%202.0-green.svg)](LICENSE)
+[![Code Style](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+[![Pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white)](https://github.com/pre-commit/pre-commit)
+[![CrewAI](https://img.shields.io/badge/powered%20by-CrewAI-orange)](https://crewai.com)
 
-## Features
+> **Transform your meeting recordings into professional, structured minutes with AI-powered transcription and intelligent summarization.**
 
-- **Audio Transcription**: Uses ElevenLabs API to transcribe meeting recordings
-- **AI-Powered Minutes**: Generates structured meeting minutes using CrewAI
-- **Gmail Integration**: Automatically creates draft emails with meeting minutes
-- **Chunked Processing**: Handles large audio files by processing in chunks
-- **OAuth2 Authentication**: Secure Gmail authentication with proper redirect handling
+An enterprise-grade AI solution that automatically transcribes meeting audio, generates structured meeting minutes using advanced AI agents, and seamlessly integrates with Gmail for instant sharing. Perfect for businesses, teams, and professionals who want to streamline their meeting documentation workflow.
 
-## Architecture
+---
 
+## 🌟 Features
+
+### 🎯 Core Capabilities
+- **🎙️ Audio Transcription**: High-accuracy transcription using ElevenLabs API with speaker diarization
+- **🤖 AI-Powered Minutes**: Intelligent meeting minutes generation using CrewAI multi-agent system
+- **📧 Gmail Integration**: Automatic draft creation with OAuth2 authentication
+- **📊 Chunked Processing**: Efficient handling of large audio files (up to 100MB)
+- **🔒 Secure Authentication**: Enterprise-grade OAuth2 with proper redirect handling
+- **🎨 Rich Output**: Structured minutes with action items, sentiment analysis, and summaries
+
+### 🛠️ Technical Features
+- **Local LLM Support**: Works with Ollama, LocalAI, and OpenAI-compatible servers
+- **Flexible Audio Formats**: Supports WAV, MP3, M4A, and FLAC
+- **Robust Error Handling**: Comprehensive logging and fallback mechanisms
+- **Code Quality**: Pre-commit hooks, automated testing, and documentation
+- **Extensible Architecture**: Easy to add new agents, tools, and workflows
+
+---
+
+## 📋 Table of Contents
+
+- [Quick Start](#-quick-start)
+- [Installation](#-installation)
+- [Configuration](#-configuration)
+- [Usage](#-usage)
+- [Architecture](#-architecture)
+- [API Reference](#-api-reference)
+- [Troubleshooting](#-troubleshooting)
+- [Development](#-development)
+- [Contributing](#-contributing)
+- [License](#-license)
+- [Support](#-support)
+
+---
+
+## 🚀 Quick Start
+
+Get up and running in 5 minutes:
+
+```bash
+# 1. Clone and setup
+git clone https://github.com/yourusername/Meeting-Minutes-Agent.git
+cd Meeting-Minutes-Agent
+python -m venv venv && source venv/bin/activate  # Windows: venv\Scripts\activate
+
+# 2. Install dependencies
+pip install -r requirements.txt
+
+# 3. Setup environment
+cp .env.example .env  # Edit with your API keys
+
+# 4. Start local LLM (choose one)
+ollama serve  # or your preferred local LLM server
+
+# 5. Run the application
+python src/meeting_minutes/main.py
 ```
-src/meeting_minutes/
-├── config/           # Configuration management
-├── crews/           # CrewAI crew definitions
-│   ├── meeting_minutes_crew/
-│   └── gmailcrew/
-├── tools/           # Custom tools and utilities
-├── utils/           # Utility functions and patches
-└── main.py         # Main application entry point
-```
 
-## Prerequisites
+**First time?** Follow our [detailed installation guide](#-installation) below.
 
-- Python 3.8+
-- Google Cloud Console project with Gmail API enabled
-- ElevenLabs API key
-- **Local LLM Server** (e.g., Ollama, LocalAI, or compatible OpenAI API server)
-- Audio file in WAV format
+---
 
-## Setup Instructions
+## 📦 Installation
 
-### 1. Environment Setup
+### Prerequisites
+
+Before you begin, ensure you have:
+
+| Requirement | Version | Purpose |
+|-------------|---------|---------|
+| **Python** | 3.8+ | Core runtime |
+| **Local LLM Server** | Any | AI processing (Ollama, LocalAI, etc.) |
+| **ElevenLabs API** | Latest | Audio transcription |
+| **Google Cloud Project** | - | Gmail API access |
+| **Audio File** | WAV/MP3/M4A/FLAC | Meeting recording |
+
+### Step 1: Environment Setup
 
 ```bash
 # Clone the repository
-git clone <repository-url>
+git clone https://github.com/yourusername/Meeting-Minutes-Agent.git
 cd Meeting-Minutes-Agent
 
-# Create virtual environment
+# Create and activate virtual environment
 python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
 
-# Install dependencies
+# Activate virtual environment
+# On Windows:
+venv\Scripts\activate
+# On macOS/Linux:
+source venv/bin/activate
+
+# Upgrade pip and install dependencies
+pip install --upgrade pip
 pip install -r requirements.txt
 
 # Install development dependencies (optional)
 pip install -r requirements-dev.txt
-
-# Set up pre-commit hooks (recommended for development)
-pre-commit install
 ```
 
-### 1.1. Pre-commit Setup (For Developers)
+### Step 2: Local LLM Server Setup
 
-This project uses pre-commit hooks to ensure code quality:
+Choose one of the following options:
+
+#### Option A: Ollama (Recommended)
+```bash
+# Install Ollama
+curl -fsSL https://ollama.ai/install.sh | sh
+
+# Pull and run a model
+ollama pull llama2
+ollama serve  # Runs on http://localhost:11434
+```
+
+#### Option B: LocalAI
+```bash
+# Using Docker
+docker run -p 8080:8080 --name local-ai -ti localai/localai:latest
+
+# Or using Docker Compose
+docker-compose up -d localai
+```
+
+#### Option C: Text Generation WebUI
+```bash
+# Clone and setup
+git clone https://github.com/oobabooga/text-generation-webui.git
+cd text-generation-webui
+python server.py --api  # Runs on http://localhost:5000
+```
+
+### Step 3: API Configuration
+
+Create your environment configuration:
+
+```bash
+# Copy example environment file
+cp .env.example .env
+```
+
+Edit `.env` with your credentials:
+
+```env
+# ElevenLabs API (required)
+ELEVENLABS_API_KEY=your_elevenlabs_api_key_here
+ELEVEN_LABS_API_KEY=your_elevenlabs_api_key_here  # Alternative name
+
+# OpenAI API (for fallback, optional if using local LLM)
+OPENAI_API_KEY=your_openai_api_key_here
+
+# Local LLM Server Configuration (optional)
+LOCAL_LLM_BASE_URL=http://localhost:11434  # Adjust based on your server
+LOCAL_LLM_MODEL=llama2                     # Adjust based on your model
+
+# Logging Configuration
+LOG_LEVEL=INFO
+GOOGLE_OAUTH_PORT=62366
+```
+
+### Step 4: Google Cloud Console Setup
+
+1. **Create Google Cloud Project**
+   - Go to [Google Cloud Console](https://console.cloud.google.com/)
+   - Create new project or select existing one
+   - Note your project ID
+
+2. **Enable Gmail API**
+   ```bash
+   # Using gcloud CLI (optional)
+   gcloud services enable gmail.googleapis.com --project=your-project-id
+   ```
+
+3. **Create OAuth 2.0 Credentials**
+   - Navigate to "APIs & Services" > "Credentials"
+   - Click "Create Credentials" > "OAuth client ID"
+   - Select "Desktop application"
+   - Add authorized redirect URI: `http://localhost:62366`
+
+4. **Download Credentials**
+   - Download the `credentials.json` file
+   - Place it in: `src/meeting_minutes/crews/gmailcrew/tools/credentials.json`
+
+### Step 5: Audio File Preparation
+
+```bash
+# Place your audio file in the source directory
+cp /path/to/your/meeting.wav src/meeting_minutes/EarningsCall.wav
+
+# Supported formats: WAV, MP3, M4A, FLAC
+# Maximum recommended size: 100MB
+```
+
+### Step 6: Development Setup (Optional)
+
+For contributors and developers:
 
 ```bash
 # Install pre-commit hooks
 pre-commit install
 
-# Run hooks on all files (optional)
+# Run initial code quality check
 pre-commit run --all-files
 
-# Update hooks to latest versions
-pre-commit autoupdate
+# Verify installation
+python -m pytest tests/ -v  # Run tests (if available)
 ```
 
-The pre-commit configuration includes:
-- **Code formatting**: Black, isort
-- **Linting**: flake8, pydocstyle  
-- **Security**: bandit
-- **General checks**: trailing whitespace, file endings, syntax validation
+---
 
-### 2. Local LLM Server Setup
+## ⚙️ Configuration
 
-**Option A: Using Ollama**
-```bash
-# Install Ollama
-curl -fsSL https://ollama.ai/install.sh | sh
-
-# Pull a model (e.g., Llama 2)
-ollama pull llama2
-
-# Start server (runs on http://localhost:11434 by default)
-ollama serve
-```
-
-**Option B: Using LocalAI**
-```bash
-# Using Docker
-docker run -p 8080:8080 --name local-ai -ti localai/localai:latest
-```
-
-**Option C: Any OpenAI-compatible server**
-- Ensure it's running on http://localhost:1337 (or update config)
-- Supports `/v1/chat/completions` endpoint
-- Has at least one model available
-
-### 3. API Keys Configuration
-
-Create a `.env` file in the root directory:
-
-```env
-ELEVENLABS_API_KEY=your_elevenlabs_api_key
-ELEVEN_LABS_API_KEY=your_elevenlabs_api_key  # Alternative name
-OPENAI_API_KEY=your_openai_api_key
-```
-
-### 4. Google Cloud Console Setup
-
-1. Go to [Google Cloud Console](https://console.cloud.google.com/)
-2. Create a new project or select existing one
-3. Enable Gmail API
-4. Create OAuth 2.0 credentials
-5. Add redirect URI: `http://localhost:62366`
-6. Download `credentials.json`
-7. Place `credentials.json` in `src/meeting_minutes/crews/gmailcrew/tools/`
-
-### 5. Audio File Preparation
-
-Place your audio file as `EarningsCall.wav` in the `src/meeting_minutes/` directory.
-
-## Usage
-
-### Running the Application
-
-```bash
-python src/meeting_minutes/main.py
-```
-
-### Testing Gmail Authentication
-
-```bash
-python test_gmail_auth.py
-```
-
-### Testing Local LLM Server
-
-```python
-# Add this to your main.py or run separately
-from src.meeting_minutes.utils.monkey_patches import debug_local_server
-debug_local_server()
-```
-
-## Configuration
+### Application Configuration
 
 The application uses centralized configuration in `src/meeting_minutes/config/app_config.py`:
 
-- OAuth port configuration
-- API endpoints
-- File paths
-- Processing parameters
-- **Local LLM server settings**
-
-## Troubleshooting
-
-### Local LLM Server Issues (404 Error)
-
-**Problem**: `litellm.NotFoundError: NotFoundError: OpenAIException - Error code: 404 - {'detail': 'Not Found'}`
-
-**Solutions**:
-
-1. **Check if your local LLM server is running**:
-   ```bash
-   curl http://localhost:1337/health
-   # or whatever port your server uses
-   ```
-
-2. **Verify available models**:
-   ```bash
-   curl http://localhost:1337/v1/models
-   ```
-
-3. **Common Local LLM Server URLs**:
-   - Ollama: `http://localhost:11434`
-   - LocalAI: `http://localhost:8080`
-   - Text Generation WebUI: `http://localhost:5000`
-   - Update `LLM_SERVER["base_url"]` in config accordingly
-
-4. **Enable debugging**:
-   ```python
-   # Add to your main.py
-   import litellm
-   litellm.set_verbose = True
-   ```
-
-5. **Check server logs** for what endpoint is being requested
-
-6. **Try different model names**:
-   - The app tries multiple model names automatically
-   - Check your server's model list and update config if needed
-
-### Gmail Authentication Issues
-
-1. Verify redirect URI matches: `http://localhost:62366`
-2. Check credentials.json is properly placed
-3. Run the test script: `python test_gmail_auth.py`
-
-### Audio Processing Issues
-
-1. Ensure audio file is in WAV format
-2. Check ElevenLabs API key is valid
-3. Verify audio file size (large files are chunked automatically)
-
-## Development
-
-### Code Quality Standards
-
-This project uses automated code quality tools:
-
-- **Black**: Code formatting (88 character line limit)
-- **isort**: Import sorting  
-- **flake8**: Linting and style checking
-- **pydocstyle**: Docstring conventions (Google style)
-- **bandit**: Security vulnerability scanning
-- **pre-commit**: Automated quality checks before commits
-
-### Running Quality Checks Manually
-
-```bash
-# Format code
-black src/ test_*.py
-
-# Sort imports  
-isort src/ test_*.py
-
-# Lint code
-flake8 src/ test_*.py
-
-# Check docstrings
-pydocstyle src/
-
-# Security scan
-bandit -r src/
-
-# Run all pre-commit hooks
-pre-commit run --all-files
+```python
+# Example configuration customization
+PROCESSING_CONFIG = {
+    "audio": {
+        "chunk_length_ms": 60000,  # 1 minute chunks
+        "supported_formats": ["wav", "mp3", "m4a", "flac"],
+        "max_file_size_mb": 100,
+    },
+    "transcription": {
+        "cleanup_temp_files": True,
+        "retry_attempts": 3,
+        "retry_delay": 1.0,
+    }
+}
 ```
 
-### Adding Custom Tools
+### Local LLM Server Configuration
 
-1. Create new tool in `src/meeting_minutes/tools/`
-2. Inherit from `BaseTool`
-3. Define input schema with Pydantic
-4. Implement `_run` method
+Update server settings based on your setup:
 
-### Extending Crews
+```python
+LLM_SERVER = {
+    "base_url": "http://localhost:11434",  # Ollama default
+    "model_name": "llama2",
+    "api_key": "not-needed"
+}
+```
 
-1. Add new crew in `src/meeting_minutes/crews/`
-2. Define agents and tasks
-3. Configure crew parameters
-4. Integrate in main flow
+**Common Server URLs:**
+- **Ollama**: `http://localhost:11434`
+- **LocalAI**: `http://localhost:8080`
+- **Text-gen WebUI**: `http://localhost:5000`
+- **LM Studio**: `http://localhost:1234`
 
-### Local LLM Integration
+---
 
-The application uses monkey patches to redirect CrewAI's LLM calls to your local server:
+## 🎯 Usage
 
-1. **Automatic model detection** - Tries multiple model names
-2. **Debug logging** - Shows what's being sent to server
-3. **Health checks** - Verifies server connectivity
-4. **Fallback handling** - Graceful error messages
+### Basic Usage
 
-## License
+```bash
+# Run the complete pipeline
+python src/meeting_minutes/main.py
+```
 
-Apache License 2.0 - See LICENSE file for details.
+The application will:
+1. 🎤 Transcribe your audio file using ElevenLabs
+2. 🤖 Generate structured meeting minutes with AI
+3. 📧 Create a Gmail draft with the results
 
-## Contributing
+### Advanced Usage
 
-1. Fork the repository
-2. Create feature branch
-3. Make changes with tests
-4. Submit pull request
+#### Testing Components Individually
 
-## Support
+```bash
+# Test Gmail authentication
+python test_gmail_auth.py
 
-For issues and questions:
-1. Check troubleshooting section
-2. Run debug functions for local LLM server
-3. Review test scripts
-4. Check configuration files
-5. Submit GitHub issue with debug output
+# Test local LLM connection
+python -c "from src.meeting_minutes.utils.monkey_patches import debug_local_server; debug_local_server()"
+
+# Validate audio file
+python -c "
+from src.meeting_minutes.utils.audio_processor import AudioProcessor
+processor = AudioProcessor()
+info = processor.get_audio_info('src/meeting_minutes/EarningsCall.wav')
+print(info)
+"
+```
+
+#### Custom Audio Processing
+
+```python
+from meeting_minutes.utils.audio_processor import AudioProcessor
+
+processor = AudioProcessor()
+
+# Get audio information
+info = processor.get_audio_info("meeting.wav")
+print(f"Duration: {info['duration_formatted']}")
+print(f"Estimated chunks: {info['estimated_chunks']}")
+
+# Process audio in chunks
+for chunk_index, audio_data in processor.chunk_generator("meeting.wav"):
+    print(f"Processing chunk {chunk_index}")
+    # Your custom processing here
+```
+
+---
+
+## 📞 Contact & Connect
+
+### 👨‍💻 About the Me
+
+**Osama Mohamed** - AI/ML Engineer & Developer
+
+### 🌐 Professional Profiles
+
+<div align="center">
+
+[![Kaggle](https://img.shields.io/badge/Kaggle-20BEFF?style=for-the-badge&logo=kaggle&logoColor=white)](https://www.kaggle.com/osamam0)
+[![Hugging Face](https://img.shields.io/badge/🤗%20Hugging%20Face-FFD21E?style=for-the-badge)](https://huggingface.co/OsamaMo)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://linkedin.com/in/osamam0)
+
+</div>
+
+### 💬 Get in Touch
+
+- **💡 Project Collaborations** - Open to AI/ML partnerships and innovative projects
+- **🎓 Mentoring & Consulting** - Available for AI implementation guidance
+- **🔧 Technical Support** - Feel free to reach out for project-specific questions
+
+<div align="center">
+
+**"Building the future of AI, one intelligent system at a time"**
+
+---
+
+*Made with ❤️ and ☕ by [Osama Mohamed](https://linkedin.com/in/osamam0)*
+
+</div>
