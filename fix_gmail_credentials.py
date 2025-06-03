@@ -1,5 +1,4 @@
-"""
-Utility script to update the redirect URI in the credentials.json file.
+"""Utility script to update the redirect URI in the credentials.json file.
 
 This script will check if the redirect URI in credentials.json matches the configured port,
 and update it if necessary.

@@ -65,6 +65,7 @@ repos:
           --extend-ignore=E203,W503,E501,
           --exclude=.git,__pycache__,build,dist,.venv,venv
         ]
+        additional_dependencies: [flake8]
 
   # Python docstring formatting
   - repo: https://github.com/pycqa/pydocstyle
@@ -74,6 +75,7 @@ repos:
         name: Check Python docstrings (pydocstyle)
         args: [--convention=google]
         exclude: ^(test_|tests/)
+        additional_dependencies: [tomli>=1.1.0]
 
   # Security scanning with bandit
   - repo: https://github.com/pycqa/bandit
