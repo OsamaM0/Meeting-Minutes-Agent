@@ -1,15 +1,14 @@
 """Test LLM connection functionality."""
-import json
-from unittest.mock import Mock, patch
-import sys
+
 import os
+import sys
+from unittest.mock import Mock, patch
 
 import pytest
 import requests
-from langchain_openai import ChatOpenAI
 
 # Add src to path for testing
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'src'))
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "src"))
 
 
 class TestLLMConnection:
@@ -52,7 +51,7 @@ class TestLLMConnection:
         with patch("langchain_openai.ChatOpenAI") as mock_chat_openai:
             # Configure the mock to return our mock_llm
             mock_chat_openai.return_value = mock_llm
-            
+
             # Mock the invoke method to return a predictable response
             mock_response = Mock()
             mock_response.content = "Test response from LLM"
@@ -81,6 +80,7 @@ class TestLLMConnection:
                 mock_get_llm.return_value = mock_instance
 
                 from meeting_minutes.utils.llm_config import get_llm
+
                 llm = get_llm()
 
                 assert llm == mock_instance
@@ -93,15 +93,19 @@ class TestLLMConnection:
         """Test LLM configuration values."""
         try:
             from meeting_minutes.config.app_config import LLM_SERVER
-            
+
             assert "base_url" in LLM_SERVER
             assert "api_key" in LLM_SERVER
             assert LLM_SERVER["base_url"]  # Should not be empty
             # Handle case where API key might be None (for local LLM setups)
             api_key = LLM_SERVER["api_key"]
-            assert api_key is not None or api_key == "not-needed", f"API key should be set or 'not-needed', got: {api_key}"
+            assert (
+                api_key is not None or api_key == "not-needed"
+            ), f"API key should be set or 'not-needed', got: {api_key}"
         except ImportError:
-            pytest.skip("meeting_minutes.config module not available in test environment")
+            pytest.skip(
+                "meeting_minutes.config module not available in test environment"
+            )
 
     @pytest.mark.slow
     @pytest.mark.llm
@@ -109,12 +113,13 @@ class TestLLMConnection:
         """Test real LLM connection (slow test)."""
         try:
             from meeting_minutes.utils.llm_config import get_llm
+
             llm = get_llm()
-            response = llm.invoke([
-                {"role": "user", "content": "Hello, respond with just 'OK'"}
-            ])
+            response = llm.invoke(
+                [{"role": "user", "content": "Hello, respond with just 'OK'"}]
+            )
             assert response is not None
-            assert hasattr(response, 'content')
+            assert hasattr(response, "content")
         except ImportError:
             pytest.skip("meeting_minutes module not available")
         except Exception as e:

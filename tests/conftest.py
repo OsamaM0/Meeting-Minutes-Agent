@@ -1,12 +1,10 @@
 """Test configuration and fixtures."""
-import json
-import os
+
 import sys
 from pathlib import Path
 from unittest.mock import Mock
 
 import pytest
-from dotenv import load_dotenv
 
 # Add src to Python path
 ROOT_DIR = Path(__file__).parent.parent
@@ -67,10 +65,10 @@ def mock_credentials_data():
             "client_secret": "test-client-secret",
             "redirect_uris": [
                 "http://localhost:62366/oauth/callback",
-                "http://localhost:62366"
+                "http://localhost:62366",
             ],
             "auth_uri": "https://accounts.google.com/o/oauth2/auth",
-            "token_uri": "https://oauth2.googleapis.com/token"
+            "token_uri": "https://oauth2.googleapis.com/token",
         }
     }
 
@@ -84,7 +82,7 @@ def mock_token_data():
         "token_uri": "https://oauth2.googleapis.com/token",
         "client_id": "test-client-id",
         "client_secret": "test-client-secret",
-        "scopes": ["https://www.googleapis.com/auth/gmail.readonly"]
+        "scopes": ["https://www.googleapis.com/auth/gmail.readonly"],
     }
 
 
@@ -96,6 +94,6 @@ def pytest_collection_modifyitems(config, items):
         # Skip CrewAI tests if Self type is not available
         if "crew" in item.nodeid.lower():
             try:
-                from typing import Self
+                pass
             except ImportError:
                 item.add_marker(skip_crewai)

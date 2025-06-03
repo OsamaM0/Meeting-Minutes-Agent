@@ -1,36 +1,35 @@
-### AL ###
-#Template for AL projects for Dynamics 365 Business Central
-#launch.json folder
+# ### AL ###
+# #Template for AL projects for Dynamics 365 Business Central
+# #launch.json folder
 .vscode/
-#Cache folder
+# #Cache folder
 .alcache/
-#Symbols folder
+# #Symbols folder
 .alpackages/
-#Snapshots folder
+# #Snapshots folder
 .snapshots/
-#Testing Output folder
+# #Testing Output folder
 .output/
-#Extension App-file
+# #Extension App-file
 *.app
-#Rapid Application Development File
+# #Rapid Application Development File
 rad.json
-#Translation Base-file
+# #Translation Base-file
 *.g.xlf
-#License-file
+# #License-file
 *.flf
-#Test results file
+# #Test results file
 TestResults.xml
 
-### Python ###
-# Byte-compiled / optimized / DLL files
+# ### Python ###
+# # Byte-compiled / optimized / DLL files
 __pycache__/
-*.py[cod]
 *$py.class
 
-# C extensions
+# # C extensions
 *.so
 
-# Distribution / packaging
+# # Distribution / packaging
 .Python
 build/
 develop-eggs/
@@ -50,15 +49,15 @@ share/python-wheels/
 *.egg
 MANIFEST
 
-# PyInstaller
+# # PyInstaller
 *.manifest
 *.spec
 
-# Installer logs
+# # Installer logs
 pip-log.txt
 pip-delete-this-directory.txt
 
-# Unit test / coverage reports
+# # Unit test / coverage reports
 htmlcov/
 .tox/
 .nox/
@@ -73,7 +72,7 @@ coverage.xml
 .pytest_cache/
 cover/
 
-# Virtual environments
+# # Virtual environments
 .env
 .venv
 env/
@@ -82,7 +81,7 @@ ENV/
 env.bak/
 venv.bak/
 
-# IDEs
+# # IDEs
 .idea/
 .vscode/
 *.swp
@@ -99,8 +98,6 @@ ehthumbs.db
 Thumbs.db
 
 ### Project Specific ###
-#meeting_minutes output
-meeting_minutes/
 #meeting_minnutes_text output
 meeting_minutes_text/
 
