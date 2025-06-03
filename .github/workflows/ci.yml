@@ -32,14 +32,19 @@ jobs:
         pip install -r requirements.txt
         pip install -r requirements-dev.txt
     
+    - name: Set up Python path
+      run: echo "PYTHONPATH=$PYTHONPATH:$(pwd)/src" >> $GITHUB_ENV
+    
     - name: Lint with flake8
       run: |
         flake8 src/ --count --select=E9,F63,F7,F82 --show-source --statistics
         flake8 src/ --count --exit-zero --max-complexity=10 --max-line-length=88 --statistics
     
     - name: Test with pytest (unit tests only for CI)
+      env:
+        PYTHONPATH: ${{ github.workspace }}/src
       run: |
-        pytest tests/ -v --cov=src/meeting_minutes --cov-report=xml --cov-report=html -m "not slow and not integration"
+        pytest tests/ -v --cov=meeting_minutes --cov-report=xml --cov-report=html -m "not slow and not integration"
     
     - name: Upload coverage reports
       uses: codecov/codecov-action@v3
@@ -60,8 +65,8 @@ jobs:
       run: pip install bandit
     - name: Security scan
       run: |
-        bandit -r src/ -f sarif -o bandit-report.sarif || true
+        bandit -r src/ -f json -o bandit-report.json || true
     - name: Upload SARIF file
-      uses: github/codeql-action/upload-sarif@v2
+      uses: github/codeql-action/upload-sarif@v3
       with:
-        sarif_file: bandit-report.sarif
+        sarif_file: bandit-report.json

@@ -13,12 +13,6 @@ ROOT_DIR = Path(__file__).parent.parent
 SRC_DIR = ROOT_DIR / "src"
 sys.path.insert(0, str(SRC_DIR))
 
-# Load environment variables
-load_dotenv(ROOT_DIR / ".env")
-
-# Set default OpenAI API key for testing
-os.environ.setdefault("OPENAI_API_KEY", "sk-111222333444555666777888999000")
-
 
 @pytest.fixture(scope="session")
 def project_root():
@@ -49,9 +43,9 @@ def mock_env_vars(monkeypatch):
 def llm_config():
     """LLM configuration for testing."""
     return {
-        "base_url": "http://localhost:11434/v1",
+        "base_url": "http://localhost:1337",
         "api_key": "test-key",
-        "model": "llama3.2:3b",
+        "model": "test-model",
         "temperature": 0.7,
     }
 
@@ -60,7 +54,7 @@ def llm_config():
 def mock_llm():
     """Mock LLM for testing."""
     mock = Mock()
-    mock.invoke.return_value = Mock(content="Test response from LLM")
+    mock.invoke.return_value = Mock(content="Mock response")
     return mock
 
 
@@ -72,7 +66,8 @@ def mock_credentials_data():
             "client_id": "test-client-id",
             "client_secret": "test-client-secret",
             "redirect_uris": [
-                "http://localhost:62366/oauth/callback"
+                "http://localhost:62366/oauth/callback",
+                "http://localhost:62366"
             ],
             "auth_uri": "https://accounts.google.com/o/oauth2/auth",
             "token_uri": "https://oauth2.googleapis.com/token"
@@ -84,7 +79,7 @@ def mock_credentials_data():
 def mock_token_data():
     """Mock token data for testing."""
     return {
-        "token": "test-token",
+        "token": "test-access-token",
         "refresh_token": "test-refresh-token",
         "token_uri": "https://oauth2.googleapis.com/token",
         "client_id": "test-client-id",
