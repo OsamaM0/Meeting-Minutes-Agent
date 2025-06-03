@@ -12,6 +12,7 @@ sys.path.insert(0, src_dir)
 
 # Load environment variables
 from dotenv import load_dotenv
+
 load_dotenv()
 
 # Set OpenAI API key to prevent errors
@@ -20,12 +21,20 @@ os.environ["OPENAI_API_KEY"] = os.getenv("OPENAI_API_KEY", "NA")
 # Import LLM configuration
 from meeting_minutes.utils.llm_config import get_llm
 
+
 def test_llm_connection():
     """Test connection to the LLM."""
     try:
         print("Testing LLM connection...")
         llm = get_llm()
-        response = llm.invoke([{"role": "user", "content": "Hello, test connection. Respond with a short message."}])
+        response = llm.invoke(
+            [
+                {
+                    "role": "user",
+                    "content": "Hello, test connection. Respond with a short message.",
+                }
+            ]
+        )
         print("LLM response:", response)
         print("✅ Connection successful!")
         return True
@@ -36,6 +45,7 @@ def test_llm_connection():
         print("2. Check if the LLM server requires a different configuration.")
         print("3. Verify that no environment variables are overriding your settings.")
         return False
+
 
 if __name__ == "__main__":
     test_llm_connection()
