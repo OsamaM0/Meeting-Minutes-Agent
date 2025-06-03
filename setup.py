@@ -13,8 +13,8 @@ with open("requirements.txt", encoding="utf-8") as fh:
 setup(
     name="meeting-minutes-agent",
     version="0.1.0",
-    author="Your Name",
-    author_email="your.email@example.com",
+    author="Osama Mohammad",
+    author_email="osamamohamedmohamed30@gmail.com",
     description="An AI-powered meeting minutes generator",
     long_description=long_description,
     long_description_content_type="text/markdown",
@@ -26,13 +26,10 @@ setup(
         "Intended Audience :: Developers",
         "License :: OSI Approved :: Apache Software License",
         "Operating System :: OS Independent",
-        "Programming Language :: Python :: 3",
-        "Programming Language :: Python :: 3.8",
-        "Programming Language :: Python :: 3.9",
         "Programming Language :: Python :: 3.10",
         "Programming Language :: Python :: 3.11",
     ],
-    python_requires=">=3.8",
+    python_requires=">=3.10",
     install_requires=requirements,
     extras_require={
         "dev": [
@@ -41,6 +38,8 @@ setup(
             "isort>=5.13.0",
             "flake8>=7.0.0",
             "pytest>=7.4.0",
+            "pytest-cov>=4.1.0",
+            "pytest-mock>=3.12.0",
         ],
     },
     entry_points={
